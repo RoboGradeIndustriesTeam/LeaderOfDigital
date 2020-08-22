@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+Статья {{ id }}
+{% endblock %}
+{% block username %}
+{{ username }}
+{% endblock %}
+{% block content %}
+<div class="div"> 
+	<h3 class="navbar-text">{{ ArticleName }}</h3>
+	<h6>{{ ArticleDesc }}</h6>
+	{% if ArticleAcRePerm %}
+	<button class="btn btn-success" onclick="accept()">Accept</button>
+	<button class="btn btn-danger" onclick="reject()">Reject</button>
+	{% endif %}
+</div>
+{% endblock %}
+{% block script %}
+function accept()
+{
+	location.href="/cmd?cmd=acceptArticle&articleid={{ id }}";
+}
+function reject()
+{
+	location.href="/cmd?cmd=rejectArticle&articleid={{ id }}";
+}
+{% endblock %}
+
