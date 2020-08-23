@@ -35,7 +35,7 @@ def login():
         if getUser().id is not None:
             return redirect(url_for('index', username=getUser().firstname + " " + getUser().lastname))
         else:
-            return redirect(url_for('index', logged=False, alscriptuse=True))
+            return redirect(url_for('index', logged=False))
     if getUser().id is None:
         return render_template("login.html", logged=False, urlReg=url_for('register'))
     else:
