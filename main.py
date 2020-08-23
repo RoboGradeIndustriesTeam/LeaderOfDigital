@@ -18,7 +18,7 @@ users = []
 def index():
     global username, user
     if getUser().id is None:
-        return render_template("main.html", username="You is not logged", logged=False)
+        return render_template("main.html", username="You is not logged", logged=False, Alscript=request.args.get('Alscript'), alscriptuse=request.args.get('AlscriptUse'))
     else:
         return render_template("main.html", username=getUser().firstname + " " + getUser().lastname, logged=True)
 
@@ -32,7 +32,10 @@ def login():
         user = User()
         user.login(database=db, login=usernameS, password=password, cursor=cursor)
         addUser(user)
-        return redirect(url_for('index', username=getUser().firstname + " " + getUser().lastname))
+        if getUser().id is not None:
+            return redirect(url_for('index', username=getUser().firstname + " " + getUser().lastname))
+        else:
+            return redirect(url_for('index', logged=False, alscriptuse=True))
     if getUser().id is None:
         return render_template("login.html", logged=False, urlReg=url_for('register'))
     else:
