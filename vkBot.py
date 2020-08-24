@@ -37,9 +37,9 @@ for event in longpoll.listen():
                 if user[0] == event.user_id:
                     thisUserIsSending = [event.user_id, user[1]]
 
-            if request == "помощь":
+            if request.lower() == "помощь":
                 write_msg(event.user_id, messages.help)
-            elif request == "отправитьЗапрос":
+            elif request.lower() == "отправитьЗапрос":
                 if thisUserIsSending == False:
                     users_sendingsZapros.append([event.user_id, 0])
                     write_msg(event.user_id, "Введите имя запроса:")
