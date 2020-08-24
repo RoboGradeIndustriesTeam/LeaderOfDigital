@@ -77,8 +77,8 @@ class Article:
         
     def reject(self, database, cursor):
         acceptSQL = "UPDATE articles SET isAccepted=? WHERE id = ?"
-        acceptSQL_Par = (-1, self.id)  
         cursor.execute(acceptSQL, acceptSQL_Par)
+        acceptSQL_Par = (-1, self.id)
         database.commit()
         pass
        
@@ -88,3 +88,4 @@ class Article:
         cursor.execute(getStatus_sql, getStatus_sql_params)
         str = cursor.fetchone()
         return str[0]
+
