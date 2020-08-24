@@ -129,8 +129,15 @@ def cmd():
         print(rebool)
         if art.getStatus(db, cursor) == 1 or art.getStatus(db, cursor) == -1:
             rebool = False
+        ArticleStringStatus = ""
+        if art.getStatus(db, cursor) == 0:
+            ArticleStringStatus = "в обработке"
+        if art.getStatus(db, cursor) == 1:
+            ArticleStringStatus = "принят"
+        if art.getStatus(db, cursor) == -1:
+            ArticleStringStatus = "отклонён"
         return render_template('article.html', ArticleName=art.title, ArticleDesc=art.desc, id=artID,
-                               ArticleAcRePerm=rebool, username=getUser().firstname + " " + getUser().lastname, logged=True)
+                               ArticleAcRePerm=rebool, username=getUser().firstname + " " + getUser().lastname, status=ArticleStringStatus, logged=True)
 
 def getUser():
     global users
