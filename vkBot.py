@@ -4,7 +4,7 @@ import random
 import messages
 from sqlite3 import connect
 import os.path
-from Classes import Article
+from Classes import Article, User
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(BASE_DIR, "database.sqlite3")
 db = connect(db_path, check_same_thread=False)
@@ -56,5 +56,6 @@ for event in longpoll.listen():
                 if request.lower() == "Да":
                     write_msg(event.user_id, "Запрос отправлен")
                     art = Article()
-                    art.newArticle(thisUserIsSending[1], thisUserIsSending[2])
+                    usr = User()
+                    art.newArticle(thisUserIsSending[1], thisUserIsSending[2], database=db, cursor=db.cursor(), user=usr)
                     thisUserIsSending = []
