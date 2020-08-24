@@ -32,7 +32,7 @@ for event in longpoll.listen():
 
             # Сообщение от пользователя
             request : str = event.text
-            thisUserIsSending = []
+            thisUserIsSending = [None, None, None, None]
             for user in users_sendingsZapros:
                 if user[0] == event.user_id:
                     thisUserIsSending = [event.user_id, user[1]]
@@ -40,19 +40,19 @@ for event in longpoll.listen():
             try:
                 if request.lower() == "помощь":
                     write_msg(event.user_id, messages.help)
-                elif request.lower() == "отправить запрос":
+                if request.lower() == "отправить запрос":
                     if thisUserIsSending == False:
                         users_sendingsZapros.append([event.user_id, 0])
                         write_msg(event.user_id, "Введите имя запроса:")
-                elif thisUserIsSending[0] and thisUserIsSending[1] == 0:
+                if thisUserIsSending[0] and thisUserIsSending[1] == 0:
                     thisUserIsSending.append(request)
                     write_msg(event.user_id, "Введите описание запроса:")
                     thisUserIsSending[1] = 1
-                elif thisUserIsSending[0] and thisUserIsSending[1] == 1:
+                if thisUserIsSending[0] and thisUserIsSending[1] == 1:
                     thisUserIsSending.append(request)
                     write_msg(event.user_id, "Чтобы сохранить запрос напишите да чтобы не отправлять напишите что-то другое:")
                     thisUserIsSending[1] == 2
-                elif thisUserIsSending[0] and thisUserIsSending[1] == 2:
+                if thisUserIsSending[0] and thisUserIsSending[1] == 2:
                     if request.lower() == "Да":
                         write_msg(event.user_id, "Запрос отправлен")
                         art = Article()
