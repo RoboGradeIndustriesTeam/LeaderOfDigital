@@ -37,27 +37,24 @@ for event in longpoll.listen():
                 if user[0] == event.user_id:
                     thisUserIsSending = [event.user_id, user[1]]
 
-            try:
-                if request == "помощь":
-                    write_msg(event.user_id, messages.help)
-                if request == "отправить запрос":
-                    if thisUserIsSending == False:
-                        users_sendingsZapros.append([event.user_id, 0])
-                        write_msg(event.user_id, "Введите имя запроса:")
-                if thisUserIsSending[0] and thisUserIsSending[1] == 0:
-                    thisUserIsSending.append(request)
-                    write_msg(event.user_id, "Введите описание запроса:")
-                    thisUserIsSending[1] = 1
-                if thisUserIsSending[0] and thisUserIsSending[1] == 1:
-                    thisUserIsSending.append(request)
-                    write_msg(event.user_id, "Чтобы сохранить запрос напишите да чтобы не отправлять напишите что-то другое:")
-                    thisUserIsSending[1] == 2
-                if thisUserIsSending[0] and thisUserIsSending[1] == 2:
-                    if request.lower() == "Да":
-                        write_msg(event.user_id, "Запрос отправлен")
-                        art = Article()
-                        usr = User()
-                        art.newArticle(thisUserIsSending[1], thisUserIsSending[2], database=db, cursor=db.cursor(), user=usr)
-                        thisUserIsSending = []
-            except IndexError:
-                print ("Error: IndexError")
+            if request == "помощь":
+                write_msg(event.user_id, messages.help)
+            elif request == "отправитьЗапрос":
+                if thisUserIsSending == False:
+                    users_sendingsZapros.append([event.user_id, 0])
+                    write_msg(event.user_id, "Введите имя запроса:")
+            elif thisUserIsSending[0] and thisUserIsSending[1] == 0:
+                thisUserIsSending.append(request)
+                write_msg(event.user_id, "Введите описание запроса:")
+                thisUserIsSending[1] = 1
+            elif thisUserIsSending[0] and thisUserIsSending[1] == 1:
+                thisUserIsSending.append(request)
+                write_msg(event.user_id, "Чтобы сохранить запрос напишите да чтобы не отправлять напишите что-то другое:")
+                thisUserIsSending[1] == 2
+            elif thisUserIsSending[0] and thisUserIsSending[1] == 2:
+                if request.lower() == "Да":
+                    write_msg(event.user_id, "Запрос отправлен")
+                    art = Article()
+                    usr = User()
+                    art.newArticle(thisUserIsSending[1], thisUserIsSending[2], database=db, cursor=db.cursor(), user=usr)
+                    thisUserIsSending = []
