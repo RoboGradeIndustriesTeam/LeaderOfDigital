@@ -16,8 +16,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 	<script type="text/javascript">
 		{% block script %}{% endblock %}s
-	</script>s
-
+	</script>
 </head>
 <body>
     <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
@@ -29,8 +28,6 @@
             <a class="p-2 text-dark" href="create">Создать запрос</a>
             <a class="p-2 text-dark" href="listArticles">Запросы</a>
             {% endif %}
-
-
         </nav>
         {% if logged %}
         <a class="btn btn-outline-primary btnc" href="#">{% block username %}{% endblock %}</a>
