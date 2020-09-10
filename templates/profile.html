@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+Гл. Страница
+{% endblock %}
+{% block username %}
+{{ username }}
+{% endblock %}
+{% block content %}
+<div class="row mx-auto" style="width: 750px;">
+  <div class="col px-md-1"><div class="p-3 border bg-light">Username: {{ username }}</div></div>
+    <div class="col px-md-1"><div class="p-3 border bg-light">Role: {{ role }}</div></div>
+    <div class="col px-md-1"><div class="p-3 border bg-light">Reputation: {{ rep }}</div></div>
+</div>
+{% endblock %}
+{% block style %}
+
+{% endblock %}

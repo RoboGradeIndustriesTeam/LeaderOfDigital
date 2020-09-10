@@ -1,6 +1,6 @@
 import os.path
 from sqlite3 import connect
-
+import _md5
 from flask import Flask, render_template, request, redirect, url_for
 
 from Classes import User, Article
@@ -21,6 +21,21 @@ def index():
         return render_template("main.html", username="You is not logged", logged=False, Alscript=request.args.get('Alscript'), alscriptuse=request.args.get('AlscriptUse'))
     else:
         return render_template("main.html", username=getUser().firstname + " " + getUser().lastname, logged=True)
+
+@app.route('/profile')
+def profile():
+    user = getUser()
+    role = "Пользователь"
+    try:
+        repu = user.getRepu(user=user, database=db, cursor=cursor)[0]
+        if user.GetArtAcRePern(database=db, cursor=cursor, user=user)[0] == 1:
+            role = "Управляющий"
+        if getUser().id is None:
+            return render_template("profile.html", username="You is not logged", logged=False, Alscript=request.args.get('Alscript'), alscriptuse=request.args.get('AlscriptUse'), role=role)
+        else:
+            return render_template("profile.html", username=getUser().firstname + " " + getUser().lastname, logged=True, role=role, rep=repu)
+    except:
+        return redirect(url_for('/'))
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -68,7 +83,12 @@ def create():
         name = request.form.get('name')
         desc = request.form.get('desc')
         article = Article()
-        article.newArticle(name=name, desc=desc, database=db, cursor=cursor, user=getUser())
+        file = request.files["file"]
+        print (type(file))
+        id = article.getLastID(database=db, cursor=cursor)
+        print(id)
+        file.save(os.path.abspath(os.curdir) + "\\static\\photos.{0}.jpg".format(id), buffer_size=16384)
+        article.newArticle(name=name, desc=desc, database=db, cursor=cursor, user=getUser(), path="photos/photos.{0}.jpg".format(id))
 
         return redirect(url_for('index', username=username))
     return render_template('createArticle.html', username="You is not logged")
@@ -136,8 +156,9 @@ def cmd():
             ArticleStringStatus = "принят"
         if art.getStatus(db, cursor) == -1:
             ArticleStringStatus = "отклонён"
+        print (art.imgPath)
         return render_template('article.html', ArticleName=art.title, ArticleDesc=art.desc, id=artID,
-                               ArticleAcRePerm=rebool, username=getUser().firstname + " " + getUser().lastname, status=ArticleStringStatus, logged=True)
+                               ArticleAcRePerm=rebool, username=getUser().firstname + " " + getUser().lastname, status=ArticleStringStatus, imgPath=art.imgPath, logged=True)
 
 def getUser():
     global users

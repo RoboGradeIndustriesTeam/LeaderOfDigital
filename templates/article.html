@@ -6,8 +6,9 @@
 {{ username }}
 {% endblock %}
 {% block content %}
-<div class="div"> 
+<div class="div">
 	<h3 class="navbar-text">{{ ArticleName }}</h3>
+	<img src="{{ imgPath }}">
 	<h6>{{ ArticleDesc }}</h6>
 	{% if ArticleAcRePerm %}
 	<button class="btn btn-success" onclick="accept()">Accept</button>

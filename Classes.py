@@ -1,3 +1,5 @@
+import _md5
+import hashlib
 class User:
     id = None
     username = None
@@ -8,7 +10,8 @@ class User:
 
     def login(self, database, cursor, login, password):
         login_sql = "SELECT * FROM users WHERE username = ? AND password = ?"
-        login_sql_param = (login, password)
+        hashpassword = hashlib.md5(bytes(password.encode()))
+        login_sql_param = (login, hashpassword.hexdigest())
         cursor.execute(login_sql, login_sql_param)
         str = cursor.fetchall()
         boolforret = False
@@ -25,7 +28,8 @@ class User:
 
     def register(self, database, cursor, login, password, firstname, lastname):
         reg_sql = "INSERT INTO users (id, username, password, reputation, firstname, lastname, cmdAccAndRej) VALUES (NULL, ?, ?, 100, ?, ?, 0)"
-        reg_sql_param = (login, password, firstname, lastname)
+        hashpassword = hashlib.md5(bytes(password.encode()))
+        reg_sql_param = (login, hashpassword.hexdigest(), firstname, lastname)
         cursor.execute(reg_sql, reg_sql_param)
         self.firstname = firstname
         self.lastname = lastname
@@ -41,7 +45,13 @@ class User:
         cursor.execute(GetArtAcRePern_sql, GetArtAcRePern_sql_params)
         strka = cursor.fetchone()
         return strka
-        
+
+    def getRepu(self, database, cursor, user):
+        GetArtAcRePern_sql = "SELECT reputation from users WHERE ID = ?"
+        GetArtAcRePern_sql_params = (str(user.id),)
+        cursor.execute(GetArtAcRePern_sql, GetArtAcRePern_sql_params)
+        strka = cursor.fetchone()
+        return strka
        
       
 class Article:
@@ -49,21 +59,23 @@ class Article:
     title = None
     desc = None
     byUserID = None
-
+    imgPath = None
     def fetchById(self, id, database, cursor):
         fetchbyId_sql = "SELECT * from articles WHERE id = ?"
         fetchbyId_sql_params = (id,)
         cursor.execute(fetchbyId_sql, fetchbyId_sql_params)
         str = cursor.fetchall()
+        print (str)
         self.id = str[0][0]
         self.title = str[0][1]
         self.desc = str[0][2]
         self.byUserID = str[0][3]
+        self.imgPath = str[0][5]
         return self
 
-    def newArticle(self, name, desc, database, user, cursor):
-        newArticleSQL = "INSERT INTO articles (id, title, desc, byUserid, isAccepted) VALUES (NULL, ?, ?, ?, 0)"
-        newArticleSQL_params = (name, desc, user.id)
+    def newArticle(self, name, desc, database, user, cursor, path):
+        newArticleSQL = "INSERT INTO articles (id, title, desc, byUserid, isAccepted, imgPath) VALUES (NULL, ?, ?, ?, 0, ?)"
+        newArticleSQL_params = (name, desc, user.id, path)
         cursor.execute(newArticleSQL, newArticleSQL_params)
         database.commit()
         pass
@@ -89,3 +101,10 @@ class Article:
         str = cursor.fetchone()
         return str[0]
 
+    def getLastID(self, database, cursor):
+        getLastID_sql = "SELECT id FROM articles ORDER BY id DESC LIMIT 0, 49999;"
+        cursor.execute(getLastID_sql)
+        id = cursor.fetchone()[0]
+        return id
+
+"""SELECT "_rowid_",* FROM "main"."articles"  ORDER BY "id" DESC LIMIT 0, 49999;"""
